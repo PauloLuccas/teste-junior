@@ -5,18 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PessoaStoreRequest;
 use App\Http\Requests\PessoaUpdateRequest;
-use App\Services\PessoaServiceInterface;
+use App\Services\PessoaService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class PessoaController extends Controller
 {
     /**
-     * @var PessoaServiceInterface
+     * @var PessoaService
      */
     private $pessoaService;
 
-    public function __construct(PessoaServiceInterface $pessoaService)
+    public function __construct(PessoaService $pessoaService)
     {
         $this->pessoaService = $pessoaService;
     }
