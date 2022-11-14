@@ -4,8 +4,10 @@ namespace App\Services;
 
 
 use App\Repositories\PessoaRepository;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 class PessoaService implements PessoaServiceInterface
 {
@@ -14,9 +16,15 @@ class PessoaService implements PessoaServiceInterface
      */
     private $pessoaRepo;
 
-    public function __construct(PessoaRepository $pessoaRepository)
+    /**
+     * @var ValidationService
+     */
+    private $validationService;
+
+    public function __construct(PessoaRepository $pessoaRepository, ValidationService $validationService)
     {
         $this->pessoaRepo = $pessoaRepository;
+        $this->validationService = $validationService;
     }
 
     /**
@@ -24,7 +32,7 @@ class PessoaService implements PessoaServiceInterface
      */
     public function find(int $id): ?Model
     {
-        return $this->pessoaRepo->find($id);
+        return $this->pessoaRepo->findPeople($id);
     }
 
     /**
@@ -32,7 +40,7 @@ class PessoaService implements PessoaServiceInterface
      */
     public function all(): ?Collection
     {
-        // TODO: Implement all() method.
+        return $this->pessoaRepo->all();
     }
 
     /**
@@ -40,7 +48,14 @@ class PessoaService implements PessoaServiceInterface
      */
     public function create(array $data): ?Model
     {
-        $var = 10 / 0;
+        // Valida o CEP
+        if($data['cep'])
+            $this->validationService->verifyCep($data['cep']);
+
+        // Valida o CPF
+        if($data['cpf'])
+            $this->validationService->verifyCpf($data['cpf']);
+
         return $this->pessoaRepo->create($data);
     }
 
@@ -49,7 +64,12 @@ class PessoaService implements PessoaServiceInterface
      */
     public function delete(int $id): ?bool
     {
-        // TODO: Implement delete() method.
+        $people = $this->pessoaRepo->findPeople($id);
+
+        if(empty($people))
+            throw new \Exception('People not found.');
+
+        return $this->pessoaRepo->delete($id);
     }
 
     /**
@@ -57,6 +77,19 @@ class PessoaService implements PessoaServiceInterface
      */
     public function update(array $data, int $id): ?Model
     {
-        // TODO: Implement update() method.
+        // Valida o CEP
+        if($data['cep'])
+            $this->validationService->verifyCep($data['cep']);
+
+        // Valida o CPF
+        if($data['cpf'])
+            $this->validationService->verifyCpf($data['cpf']);
+
+        $people = $this->pessoaRepo->find($id);
+
+        if(empty($people))
+            throw new \Exception('People not found.');
+
+        return $this->pessoaRepo->update($data, $id);
     }
 }

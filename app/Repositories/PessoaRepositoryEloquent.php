@@ -25,14 +25,19 @@ class PessoaRepositoryEloquent extends BaseRepository implements PessoaRepositor
         return Pessoa::class;
     }
 
-    
-
     /**
      * Boot up the repository, pushing criteria
      */
     public function boot()
     {
         $this->pushCriteria(app(RequestCriteria::class));
+    }
+
+    public function findPeople($id)
+    {
+        $query = $this->model->newQuery();
+
+        return $query->find($id, ['nome', 'sobrenome', 'cpf', 'celular', 'logradouro', 'cep', 'created_at', 'updated_at']);
     }
     
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Entities\Pessoa;
 
 class PessoaStoreRequest extends FormRequest
 {
@@ -23,8 +24,6 @@ class PessoaStoreRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return Pessoa::$rules;
     }
 }
