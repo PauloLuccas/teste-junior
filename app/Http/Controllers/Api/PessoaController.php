@@ -53,10 +53,10 @@ class PessoaController extends Controller
         if($validator->fails())
             return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
 
-
         $this->pessoaService->create($request->all());
 
-        return response()->json(['status' => 'success', 'message' => 'People created successfully'], Response::HTTP_OK);
+        return response()->json(['status' => 'success', 'message' => 'People created successfully'],
+            Response::HTTP_OK);
     }
 
     /**
@@ -81,7 +81,19 @@ class PessoaController extends Controller
      */
     public function update(PessoaUpdateRequest $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'cpf' => 'required|string',
+            'cep' => 'required|string'
+        ]);
+
+        if($validator->fails())
+            return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
+
+
+        $this->pessoaService->update($request->all(), $id);
+
+        return response()->json(['status' => 'success', 'message' => 'People update successfully'],
+            Response::HTTP_OK);
     }
 
     /**
