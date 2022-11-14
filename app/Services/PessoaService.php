@@ -32,7 +32,7 @@ class PessoaService implements PessoaServiceInterface
      */
     public function find(int $id): ?Model
     {
-        return $this->pessoaRepo->find($id);
+        return $this->pessoaRepo->findPeople($id);
     }
 
     /**
@@ -64,7 +64,7 @@ class PessoaService implements PessoaServiceInterface
      */
     public function delete(int $id): ?bool
     {
-        $people = $this->pessoaRepo->find($id);
+        $people = $this->pessoaRepo->findPeople($id);
 
         if(empty($people))
             throw new \Exception('People not found.');

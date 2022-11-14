@@ -94,6 +94,12 @@ class PessoaController extends Controller
         if($validator->fails())
             return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
 
+        $pessoa = $this->pessoaService->find($id);
+
+        if (empty($pessoa))
+            return response()->json(['status' => 'erro', 'message' => 'People not found.'],
+                Response::HTTP_BAD_REQUEST);
+
         $this->pessoaService->update($request->all(), $id);
 
         return response()->json(['status' => 'success', 'message' => 'People update successfully'],
@@ -108,6 +114,12 @@ class PessoaController extends Controller
      */
     public function destroy($id)
     {
+        $pessoa = $this->pessoaService->find($id);
+
+        if (empty($pessoa))
+            return response()->json(['status' => 'erro', 'message' => 'People not found.'],
+                Response::HTTP_BAD_REQUEST);
+
         $this->pessoaService->delete($id);
 
         return response()->json(['status' => 'success', 'message' => 'People delete successfully'],
