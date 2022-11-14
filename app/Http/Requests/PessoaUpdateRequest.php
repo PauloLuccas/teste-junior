@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Entities\Pessoa;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PessoaUpdateRequest extends FormRequest
@@ -23,8 +24,6 @@ class PessoaUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return Pessoa::$rules;
     }
 }

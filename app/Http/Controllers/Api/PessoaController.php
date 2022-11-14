@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PessoaStoreRequest;
 use App\Http\Requests\PessoaUpdateRequest;
 use App\Services\PessoaService;
+use App\Services\ValidationService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Validator;
 
 class PessoaController extends Controller
 {
@@ -16,9 +18,15 @@ class PessoaController extends Controller
      */
     private $pessoaService;
 
-    public function __construct(PessoaService $pessoaService)
+    /**
+     * @var ValidationService
+     */
+    private $validationService;
+
+    public function __construct(PessoaService $pessoaService, ValidationService $validationService)
     {
         $this->pessoaService = $pessoaService;
+        $this->validationService = $validationService;
     }
 
     /**
@@ -37,11 +45,18 @@ class PessoaController extends Controller
      */
     public function store(PessoaStoreRequest $request)
     {
-        $pessoa = $this->pessoaService->create($request->all());
-        if ($pessoa) {
-            return response()->json($pessoa, Response::HTTP_OK);
-        }
-        return response()->json($pessoa, Response::HTTP_BAD_REQUEST);
+        $validator = Validator::make($request->all(),[
+            'cpf' => 'required|string|unique:pessoas',
+            'cep' => 'required|string'
+        ]);
+
+        if($validator->fails())
+            return response()->json($validator->errors(), Response::HTTP_BAD_REQUEST);
+
+
+        $this->pessoaService->create($request->all());
+
+        return response()->json(['status' => 'success', 'message' => 'People created successfully'], Response::HTTP_OK);
     }
 
     /**
