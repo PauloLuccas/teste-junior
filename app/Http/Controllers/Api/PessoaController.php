@@ -36,7 +36,10 @@ class PessoaController extends Controller
      */
     public function index()
     {
-        //
+        $people = $this->pessoaService->all();
+
+        return response()->json($people->toArray(),
+            Response::HTTP_OK);
     }
 
     /**
