@@ -69,10 +69,11 @@ class PessoaController extends Controller
     public function show($id)
     {
         $pessoa = $this->pessoaService->find($id);
-        if ($pessoa) {
-            return response()->json($pessoa, Response::HTTP_OK);
-        }
-        return response()->json($pessoa, Response::HTTP_BAD_REQUEST);
+        if (empty($pessoa))
+            return response()->json(['status' => 'erro', 'message' => 'People not found.'],
+                Response::HTTP_BAD_REQUEST);
+
+        return response()->json($pessoa, Response::HTTP_OK);
     }
 
     /**
