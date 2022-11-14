@@ -64,7 +64,12 @@ class PessoaService implements PessoaServiceInterface
      */
     public function delete(int $id): ?bool
     {
-        // TODO: Implement delete() method.
+        $people = $this->pessoaRepo->find($id);
+
+        if(empty($people))
+            throw new \Exception('People not found.');
+
+        return $this->pessoaRepo->delete($id);
     }
 
     /**
@@ -81,6 +86,7 @@ class PessoaService implements PessoaServiceInterface
             $this->validationService->verifyCpf($data['cpf']);
 
         $people = $this->pessoaRepo->find($id);
+
         if(empty($people))
             throw new \Exception('People not found.');
 
